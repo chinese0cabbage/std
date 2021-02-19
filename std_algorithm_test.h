@@ -10,6 +10,7 @@
 #include "iterator"
 #include "set"
 #include "functional"
+#include "valarray"
 
 #define STD_STD_ALGORITHM_TEST_H
 
@@ -128,6 +129,22 @@ void std_plus_test() {
 //    std::logical_or |
 //    std::logical_not!
     std::cout<<p(1,2);
+}
+
+/**
+ * 函数适配器,采用预定义的形式，将一个固定值绑定到二元函数符中，使得可以像调用一元函数符调用二元函数符，固定值会作为二元函数符中的另外一个值
+ * bind1st是将值绑定到的第一个参数，bind2st是将值绑定到第二个参数
+ */
+void std_bind1st_test(){
+    auto f = std::bind1st(std::plus<int>(),10);
+    std::cout<<f(100);
+}
+
+/**
+ * stl的容器valarray没有vector那么多的算法操作功能，但它是一个更适合于进行运算的容器
+ */
+void std_valarray_test(){
+
 }
 
 #endif //STD_STD_ALGORITHM_TEST_H

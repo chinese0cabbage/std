@@ -1,6 +1,6 @@
-#include <iostream>
+#include "std_algorithm_test.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    std_bind1st_test();
     return 0;
 }
