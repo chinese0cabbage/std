@@ -144,7 +144,29 @@ void std_bind1st_test(){
  * stl的容器valarray没有vector那么多的算法操作功能，但它是一个更适合于进行运算的容器
  */
 void std_valarray_test(){
+    using std::valarray;
+    valarray<int> arr1{1,2,3,4,5};
+    valarray<int> arr2{3,3,3,3,3};
+    valarray<int> result(5);
+    std::ostream_iterator<int,char> out(std::cout," ");
+#define _out std::copy(std::begin(result),std::end(result),out)
 
+    result=arr1*2;
+    std::cout<<"arr * 2 = ";
+    _out;
+
+    result=arr1+arr2;
+    std::cout<<"\narr1 + arr2 = ";
+    _out;
+
+    result=arr1*arr2;
+    std::cout<<"\narr1 * arr2 = ";
+    _out;
+
+    result=arr1.apply([](int i){return 2*i;});
+//    result=arr1.apply(std::bind1st(std::plus<int>(),10));应该可行的
+    std::cout<<"\narr1.apply() = ";
+    _out;
 }
 
 #endif //STD_STD_ALGORITHM_TEST_H
