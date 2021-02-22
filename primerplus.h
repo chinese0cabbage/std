@@ -96,6 +96,22 @@ namespace iterator_tt {
 //    std::insert_iterator;
 }
 
+namespace type_tt{
+    void decltype_simple_test(){
+        double x;
+        int n=1;
+        decltype(x*n) t1=10;//t1 is double
+        std::cout << t1;
+        std::string str="xxxx";
+        decltype(str+std::to_string(n)) s1;//s1 is string
+    }
+
+    template<typename T=int,typename U=double >
+    auto decltype_fun(T t,U u)-> decltype(T*U){
+
+    }
+}
+
 int execute() {
     sp::unique_ptr_test();
     return 1;
