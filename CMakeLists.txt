@@ -3,4 +3,4 @@ project(std)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(std main.cpp)
+add_executable(std main.cpp stl_allocation_test.h)

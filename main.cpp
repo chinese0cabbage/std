@@ -1,9 +1,9 @@
-#include "std_algorithm_test.h"
+#include "stl_allocation_test.h"
 
 #define SIZE 10
 
 int main() {
-    std_valarray_test();
+    execute();
 //    timespec tn;
 //    std::valarray<double> a1(SIZE);
 //    for (int i = 0; i < SIZE; ++i) {
