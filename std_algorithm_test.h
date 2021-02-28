@@ -102,10 +102,10 @@ void std_transform_one_para_test() {
 /**
  * 该程序片段接收二元函数符,第一二个参数表示第一个迭代器的起点和终点，第三个参数表示第二个迭代器的起点，第四个参数是输出迭代器，第五个参数是二元函数符
  */
-void  std_transform_two_para_test(){
+void std_transform_two_para_test() {
     std::vector<int> v1{1, 2, 3}, v2{4, 5, 6};
     std::plus<int> p;
-    std::transform(v1.begin(),v1.end(),v2.begin(),std::ostream_iterator<int ,char >(std::cout," "),p);
+    std::transform(v1.begin(), v1.end(), v2.begin(), std::ostream_iterator<int, char>(std::cout, " "), p);
 }
 
 /**
@@ -128,44 +128,62 @@ void std_plus_test() {
 //    std::logical_and &&
 //    std::logical_or |
 //    std::logical_not!
-    std::cout<<p(1,2);
+    std::cout << p(1, 2);
 }
 
 /**
  * 函数适配器,采用预定义的形式，将一个固定值绑定到二元函数符中，使得可以像调用一元函数符调用二元函数符，固定值会作为二元函数符中的另外一个值
  * bind1st是将值绑定到的第一个参数，bind2st是将值绑定到第二个参数
  */
-void std_bind1st_test(){
-    auto f = std::bind1st(std::plus<int>(),10);
-    std::cout<<f(100);
+void std_bind1st_test() {
+    auto f = std::bind1st(std::plus<int>(), 10);
+    std::cout << f(100);
 }
 
 /**
  * stl的容器valarray没有vector那么多的算法操作功能，但它是一个更适合于进行运算的容器
  */
-void std_valarray_test(){
+void std_valarray_test() {
     using std::valarray;
-    valarray<int> arr1{1,2,3,4,5};
-    valarray<int> arr2{3,3,3,3,3};
+    valarray<int> arr1{1, 2, 3, 4, 5};
+    valarray<int> arr2{3, 3, 3, 3, 3};
     valarray<int> result(5);
-    std::ostream_iterator<int,char> out(std::cout," ");
+    std::ostream_iterator<int, char> out(std::cout, " ");
 #define _out std::copy(std::begin(result),std::end(result),out)
 
-    result=arr1*2;
-    std::cout<<"arr * 2 = ";
+    result = arr1 * 2;
+    std::cout << "arr * 2 = ";
     _out;
 
-    result=arr1+arr2;
-    std::cout<<"\narr1 + arr2 = ";
+    result = arr1 + arr2;
+    std::cout << "\narr1 + arr2 = ";
     _out;
 
-    result=arr1*arr2;
-    std::cout<<"\narr1 * arr2 = ";
+    result = arr1 * arr2;
+    std::cout << "\narr1 * arr2 = ";
     _out;
 
-    result=arr1.apply([](int i){return 2*i;});
-//    result=arr1.apply(std::bind1st(std::plus<int>(),10));应该可行的
-    std::cout<<"\narr1.apply() = ";
+    result = arr1.apply([](int i) { return 2 * i; });
+//    result=arr1.apply(std::bind1st(std::plus<int>(),10));//应该可行的
+    std::cout << "\narr1.apply(lambda) = ";
+    _out;
+
+    result = std::pow(arr1, 2);
+    std::cout << "\npow(arr1,2) = ";
+    _out;
+
+    std::copy(std::begin(arr1), std::end(arr1), std::begin(result));
+    std::sort(std::begin(result), std::end(result), std::greater<int>());
+    std::cout << "\narr1 sort result:";
+    _out;
+
+    valarray<bool> r = arr1 > 3;
+    std::transform(std::begin(r), std::end(r), std::begin(result), [](bool b) { return int(b); });
+    std::cout << "\narr1 > 3 : ";
+    _out;
+
+    result[std::slice(1, 2, 2)] = 2;
+    std::cout << "\nslice(1,2,2) : ";
     _out;
 }
 
