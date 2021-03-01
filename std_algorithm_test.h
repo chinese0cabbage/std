@@ -11,6 +11,7 @@
 #include "set"
 #include "functional"
 #include "valarray"
+#include "initializer_list"
 
 #define STD_STD_ALGORITHM_TEST_H
 
@@ -185,6 +186,23 @@ void std_valarray_test() {
     result[std::slice(1, 2, 2)] = 2;
     std::cout << "\nslice(1,2,2) : ";
     _out;
+}
+
+/**
+ * 接受initializer_list传参的函数
+ * @param inputs
+ * @return
+ */
+double sum(std::initializer_list<double> inputs){
+    static double total=0;
+    std::for_each(inputs.begin(),inputs.end(),[](double d){total+=d;});
+    return total;
+}
+
+void std_initializer_list_test(){
+    std::initializer_list<double > d={1,2,3,4,5,6};
+    // sum({1,2,3,4,5,6}); //等价
+    std::cout<<sum(d);
 }
 
 #endif //STD_STD_ALGORITHM_TEST_H
