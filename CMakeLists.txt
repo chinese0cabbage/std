@@ -9,3 +9,8 @@ add_executable(std main.cpp stl_allocation_test.h)
 link_directories(“/usr/local/lib”) # lib文件夹的路径
 link_libraries(libmysql) # 直接写这个
 target_link_libraries(std mysqlcppconn) # 项目名称 libmysql
+
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/install/include")
+link_directories("${CMAKE_CURRENT_SOURCE_DIR}/install/lib")
+link_libraries(librttr_core)
+target_link_libraries(std ${CMAKE_CURRENT_SOURCE_DIR}/install/lib/librttr_core.so)

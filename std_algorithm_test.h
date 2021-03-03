@@ -205,4 +205,8 @@ void std_initializer_list_test(){
     std::cout<<sum(d);
 }
 
+void std_sort_test(){
+
+}
+
 #endif //STD_STD_ALGORITHM_TEST_H

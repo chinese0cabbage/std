@@ -1,5 +1,7 @@
 #include "std_algorithm_test.h"
 #include "mysql_test.h"
+#include "rttr/detail/base/core_prerequisites.h"
+#include "rttr/detail/base/version.h"
 
 int main() {
     execute();
