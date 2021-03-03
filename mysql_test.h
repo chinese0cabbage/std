@@ -17,7 +17,7 @@ int execute(){
     Driver *driver = get_driver_instance();
     Connection *connection = driver->connect("tcp://127.0.0.1:3306", "root", "123");
     std::cout << connection->getAutoCommit() << std::endl;
-    std::cout<< connection->getMetaData()->getMaxConnections();
+    std::cout<< connection->getMetaData()->getMaxConnections()<<std::endl;
     return 1;
 }
 

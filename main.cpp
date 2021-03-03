@@ -5,6 +5,7 @@
 
 int main() {
     execute();
+    std::cout<< RTTR_VERSION<<"\n";
 //    timespec tn;
 //    std::valarray<double> a1(SIZE);
 //    for (int i = 0; i < SIZE; ++i) {
