@@ -1,11 +1,8 @@
 #include "std_algorithm_test.h"
-#include "mysql_test.h"
-#include "rttr/detail/base/core_prerequisites.h"
-#include "rttr/detail/base/version.h"
+#include "primerplus.h"
 
 int main() {
     execute();
-    std::cout<< RTTR_VERSION<<"\n";
 //    timespec tn;
 //    std::valarray<double> a1(SIZE);
 //    for (int i = 0; i < SIZE; ++i) {

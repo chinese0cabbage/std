@@ -107,13 +107,41 @@ namespace type_tt{
     }
 
     template<typename T=int,typename U=double >
-    auto decltype_fun(T t,U u)-> decltype(T*U){
+    auto decltype_fun(T t,U u)-> decltype(t*u){
 
+    }
+
+    /*IsOverloadOsOperator为判断数据类型是否定义了输出流函数,void_t在C++14中才存在*/
+    /*type_tt::IsOverloadOsOperator<std::string>::value adjust if define <<*/
+    template <typename...Ts> using void_t=void;
+
+    template <typename T,typename =void_t <>>
+            struct IsOverloadOsOperator:std::false_type{};
+
+    template <typename T>
+    struct IsOverloadOsOperator<T,void_t<decltype(*(std::ostream *) nullptr<<std::declval<T>())>
+            >:std::true_type{};
+
+    /*problem in print function,not generic*/
+    void print(){
+
+    }
+
+    template <typename T, typename CONT=std::vector<T>>
+    void print(const CONT &cont){
+        std::for_each(std::begin(cont),std::end(cont),[](T t){std::cout<<t<<std::endl;});
+    }
+
+    template <typename T,typename ... Types>
+    void print(const T &firstArg, const Types&... args){
+        std::cout<<firstArg<<std::endl;
+        print(args...);
     }
 }
 
 int execute() {
-    sp::unique_ptr_test();
+    type_tt::print("1",2,42);
+    type_tt::print<int,std::vector<int >>(std::vector<int >{1,2,3});
     return 1;
 }
 
