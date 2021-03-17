@@ -63,7 +63,7 @@ void std_copy_test() {
  */
 void std_all_of_test() {
     std::vector<int> v{10, 20, 30, 40, 50};
-    std::cout << std::all_of(v.begin(), v.end(), [](int i) { return i % 10 == 0; });
+    std::cout << std::all_of(v.begin(), v.end(), [](int i)-> bool { return i % 10 == 0; });
 }
 
 /**

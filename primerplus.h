@@ -122,26 +122,53 @@ namespace type_tt{
     struct IsOverloadOsOperator<T,void_t<decltype(*(std::ostream *) nullptr<<std::declval<T>())>
             >:std::true_type{};
 
-    /*problem in print function,not generic*/
-    void print(){
 
+    template<typename T>
+    std::ostream& print(std::ostream &out,T const &val) {
+        return (out << val << " ");
     }
 
-    template <typename T, typename CONT=std::vector<T>>
-    void print(const CONT &cont){
-        std::for_each(std::begin(cont),std::end(cont),[](T t){std::cout<<t<<std::endl;});
+    template<template<typename,typename...> class TT,typename... Args>
+    std::ostream& operator<<(std::ostream &out,TT<Args...> const &cont);
+
+    template<typename T1,typename T2>
+    std::ostream& print(std::ostream &out,std::pair<T1,T2> const &val) {
+        return (out << "{" << val.first << ":" << val.second << "}");
+    }
+
+    template<template<typename,typename...> class TT,typename... Args>
+    std::ostream& operator<<(std::ostream &out,TT<Args...> const &cont) {
+        out<<"[";
+        for(auto&& elem : cont) {
+            print(out, elem);
+        }
+        out<<"]";
+        return out;
+    }
+
+    /*problem in print function,not generic*/
+    template <typename T>
+    void print(const T &lastArg){
+        std::cout<<lastArg<<"\n";
     }
 
     template <typename T,typename ... Types>
     void print(const T &firstArg, const Types&... args){
-        std::cout<<firstArg<<std::endl;
-        print(args...);
+        if(IsOverloadOsOperator<T>::value) {
+            std::cout << firstArg << std::endl;/*replace cout with LOG(INFO)*/
+            print(args...);
+        }
     }
 }
 
+#include "map"
+
 int execute() {
-    type_tt::print("1",2,42);
-    type_tt::print<int,std::vector<int >>(std::vector<int >{1,2,3});
+//    type_tt::print("1",std::vector<int >{1,2,3},2,42);
+//    type_tt::print<int,std::vector<int >>(std::vector<int >{1,2,3});
+    std::map<int,std::vector<std::pair<int ,int >>> m;
+    m.insert(std::make_pair<int,std::vector<std::pair<int ,int >>>(13,std::vector<std::pair<int ,int >>{std::make_pair<int ,int >(10,20),std::make_pair<int ,int >(10,20)}));
+    type_tt::print("1",m,10);
     return 1;
 }
 
