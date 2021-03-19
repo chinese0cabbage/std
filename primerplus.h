@@ -113,6 +113,8 @@ namespace type_tt{
 
     /*IsOverloadOsOperator为判断数据类型是否定义了输出流函数,void_t在C++14中才存在*/
     /*type_tt::IsOverloadOsOperator<std::string>::value adjust if define <<*/
+
+    //模板重定义
     template <typename...Ts> using void_t=void;
 
     template <typename T,typename =void_t <>>
@@ -123,6 +125,7 @@ namespace type_tt{
             >:std::true_type{};
 
 
+    //递归解包入口函数，会自行调用以下重载
     template<typename T>
     std::ostream& print(std::ostream &out,T const &val) {
         return (out << val << " ");
@@ -131,11 +134,13 @@ namespace type_tt{
     template<template<typename,typename...> class TT,typename... Args>
     std::ostream& operator<<(std::ostream &out,TT<Args...> const &cont);
 
+    //打印键值对类型
     template<typename T1,typename T2>
     std::ostream& print(std::ostream &out,std::pair<T1,T2> const &val) {
         return (out << "{" << val.first << ":" << val.second << "}");
     }
 
+    //模板的模板参数，但参数依然为参数包，可递归解开,为了解决容器中嵌套容器的情形
     template<template<typename,typename...> class TT,typename... Args>
     std::ostream& operator<<(std::ostream &out,TT<Args...> const &cont) {
         out<<"[";
@@ -147,14 +152,17 @@ namespace type_tt{
     }
 
     /*problem in print function,not generic*/
+    //递归解包结束时调用
     template <typename T>
     void print(const T &lastArg){
         std::cout<<lastArg<<"\n";
     }
 
+    //模板和函数参数包
     template <typename T,typename ... Types>
     void print(const T &firstArg, const Types&... args){
         if(IsOverloadOsOperator<T>::value) {
+            //递归展开并打印包内的内容
             std::cout << firstArg << std::endl;/*replace cout with LOG(INFO)*/
             print(args...);
         }
