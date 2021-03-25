@@ -178,6 +178,7 @@ int execute() {
     m.insert(std::make_pair<int,std::vector<std::pair<int ,int >>>(13,std::vector<std::pair<int ,int >>{std::make_pair<int ,int >(10,20),std::make_pair<int ,int >(10,20)}));
     type_tt::print("1",m,10);
     return 1;
+    //待实现：STL容器，字符串，C++基本类型，rttr可序列化的类型均可转化为字符串的模板方法
 }
 
 #endif //STD_PRIMERPLUS_H
