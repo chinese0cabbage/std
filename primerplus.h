@@ -7,6 +7,7 @@
 #include "vector"
 #include "iostream"
 #include "iterator"
+#include "rttr/registration"
 
 #include "algorithm"
 #include "string"
@@ -179,6 +180,134 @@ int execute() {
     type_tt::print("1",m,10);
     return 1;
     //待实现：STL容器，字符串，C++基本类型，rttr可序列化的类型均可转化为字符串的模板方法
+}
+
+namespace DBFilter {
+    enum ParametricKind {
+        Digital,
+        String,
+        TimeStape
+    };
+
+    enum LogicalKind {
+        NoLogical,
+        LogicalAnd,
+        LogicalOr,
+        LogicalNot
+    };
+
+    class BaseFilter {
+    public:
+        std::string key;
+        ParametricKind para;
+
+        LogicalKind logicalKind = NoLogical;
+
+        BaseFilter *logicalConnectedFilter = nullptr;
+
+        BaseFilter() {}
+
+        BaseFilter(const std::string &key, ParametricKind para) : key(key), para(para) {}
+
+        virtual ~BaseFilter() {
+            try {
+                if (logicalConnectedFilter != nullptr) {
+                    delete (logicalConnectedFilter);
+                }
+            }
+            catch (...) {
+                if (logicalConnectedFilter != nullptr) {
+                    delete (logicalConnectedFilter);
+                }
+            }
+        }
+
+        inline BaseFilter logicalConnectFilter(BaseFilter another, LogicalKind kind) {
+            this->logicalKind = kind;
+            logicalConnectedFilter = &another;
+            return *this;
+        }
+
+        RTTR_ENABLE()
+    };
+
+    class EqualFilter:public BaseFilter{
+    public:
+        bool equal = true;
+        std::string value;
+        EqualFilter() {}
+
+        EqualFilter(const std::string &key, ParametricKind para) : BaseFilter(key, para) {}
+
+        RTTR_ENABLE(BaseFilter)
+    };
+
+    class RangeFilter:public BaseFilter{
+    public:
+        bool includeUpper = true, includeLower = true;
+        std::string upperLimit, lowerLimit;
+        RangeFilter() {}
+
+        RangeFilter(const std::string &key, ParametricKind para) : BaseFilter(key, para) {}
+
+        RTTR_ENABLE(BaseFilter)
+    };
+
+    static std::vector<EqualFilter> createFilter(const rttr::instance &obj) {
+        std::vector<EqualFilter> filters;
+        auto t = obj.get_type();
+        auto props = t.get_properties();
+        for (auto &prop:props) {
+            std::string keyType = prop.get_type().get_raw_type().get_name().data();
+            if (keyType == "std::string") {
+                filters.push_back(EqualFilter(prop.get_name().data(), ParametricKind::String));
+            } else {
+                filters.push_back(EqualFilter(prop.get_name().data(), ParametricKind::Digital));
+            }
+        }
+        return filters;
+    }
+
+    template<class T>
+    std::vector<T> getFromDB(const std::vector<BaseFilter> &filters) {
+        return std::vector<T>();
+    }
+
+    RTTR_REGISTRATION {
+    rttr::registration::enumeration<ParametricKind>("ParametricKind")
+    (
+    rttr::value("Digital", ParametricKind::Digital),
+    rttr::value("String", ParametricKind::String),
+    rttr::value("TimeStape", ParametricKind::TimeStape)
+    );
+
+    rttr::registration::enumeration<LogicalKind>("LogicalKind")
+    (
+    rttr::value("NoLogical", LogicalKind::NoLogical),
+    rttr::value("LogicalAnd", LogicalKind::LogicalAnd),
+    rttr::value("LogicalOr", LogicalKind::LogicalOr),
+    rttr::value("LogicalNot", LogicalKind::LogicalNot)
+    );
+
+    rttr::registration::class_<BaseFilter>("BaseFilter")
+    .constructor<>()(rttr::policy::ctor::as_object)
+    .property("key", &BaseFilter::key)
+    .property("para", &BaseFilter::para)
+    .property("logicalKind", &BaseFilter::logicalKind)
+    .property("logicalConnectedFilter", &BaseFilter::logicalConnectedFilter);
+
+    rttr::registration::class_<EqualFilter>("EqualFilter")
+    .constructor<>()(rttr::policy::ctor::as_object)
+    .property("equal", &EqualFilter::equal)
+    .property("value", &EqualFilter::value);
+
+    rttr::registration::class_<RangeFilter>("RangeFilter")
+    .constructor<>()(rttr::policy::ctor::as_object)
+    .property("includeLower", &RangeFilter::includeLower)
+    .property("includeUpper", &RangeFilter::includeUpper)
+    .property("lowerLimit", &RangeFilter::lowerLimit)
+    .property("upperLimit", &RangeFilter::upperLimit);
+};
 }
 
 #endif //STD_PRIMERPLUS_H
