@@ -1,8 +1,6 @@
-#include "std_algorithm_test.h"
-#include "primerplus.h"
-#include "template_test/template_try.h"
+#include "boost_test.h"
 
-int main() {
-    execute();
+int main(int argc, char *argv[]) {
+    terminalOption(argc,argv);
     return 0;
 }
